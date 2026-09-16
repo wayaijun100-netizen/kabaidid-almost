@@ -1,0 +1,6 @@
+{
+  "name": "Kabaddi Scoreboard",
+  "description": "A high-visibility TV scoreboard application for Kabaddi matches featuring 30-second raid timer, customizable team variables, keyboard shortcuts, free-transform UI layout editor, and real-time OBS WebSocket live output with 5 individual browser source overlays.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

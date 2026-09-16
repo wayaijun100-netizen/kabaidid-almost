@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Timer</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      overflow: hidden;
+    }
+    #value {
+      font-family: Arial, sans-serif;
+      font-size: 96px;
+      font-weight: bold;
+      color: #ffffff;
+      line-height: 1;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <span id="value">30</span>
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const host = params.get('ip') || window.location.hostname || '127.0.0.1';
+      const port = params.get('port') || '8765';
+      const wsUrl = params.get('ws') || ('ws://' + host + ':' + port);
+      const valueEl = document.getElementById('value');
+
+      function connect() {
+        try {
+          const ws = new WebSocket(wsUrl);
+          ws.onmessage = function (event) {
+            try {
+              const data = JSON.parse(event.data);
+              // Authoritative timer value received from scoreboard application ONLY.
+              // No local countdown, calculation, or timer interval.
+              if (data && typeof data.timer !== 'undefined') {
+                valueEl.textContent = data.timer;
+              }
+            } catch (e) {}
+          };
+          ws.onclose = function () {
+            setTimeout(connect, 1000);
+          };
+          ws.onerror = function () {
+            ws.close();
+          };
+        } catch (err) {
+          setTimeout(connect, 1500);
+        }
+      }
+      connect();
+    })();
+  </script>
+</body>
+</html>
